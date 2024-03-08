@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhx1wq360om1i"]
+
+[sub_resource type="Theme" id="Theme_n6o2e"]
+
+[node name="RucursiveNeuron" type="GraphNode"]
+offset_left = 105.0
+offset_top = 15.0
+offset_right = 548.0
+offset_bottom = 285.0
+size_flags_stretch_ratio = 0.0
+theme = SubResource("Theme_n6o2e")
+title = "Recursive"
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = false
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+
+[node name="GraphNode" type="GraphNode" parent="Control"]
+layout_mode = 2
+offset_left = 16.0
+offset_top = -5.0
+offset_right = 402.0
+offset_bottom = 195.0
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+
+[node name="Control" type="Control" parent="Control/GraphNode"]
+layout_mode = 2
+
+[node name="GraphNode2" type="GraphNode" parent="Control/GraphNode/Control"]
+layout_mode = 2
+offset_left = 31.0
+offset_top = 4.0
+offset_right = 328.0
+offset_bottom = 120.0
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+
+[node name="Control" type="Control" parent="Control/GraphNode/Control/GraphNode2"]
+layout_mode = 2
+
+[node name="GraphNode3" type="GraphNode" parent="Control/GraphNode/Control/GraphNode2/Control"]
+layout_mode = 2
+offset_left = 29.0
+offset_right = 219.0
+offset_bottom = 64.0
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+
+[node name="Control" type="Control" parent="Control/GraphNode/Control/GraphNode2/Control/GraphNode3"]
+layout_mode = 2

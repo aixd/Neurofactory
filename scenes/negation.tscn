@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://blcny17vpqa8l"]
+
+[ext_resource type="Script" path="res://scripts/negation.gd" id="1_qklf7"]
+
+[sub_resource type="Theme" id="Theme_n6o2e"]
+
+[node name="Negation" type="GraphNode"]
+offset_right = 161.0
+offset_bottom = 102.0
+size_flags_stretch_ratio = 0.0
+theme = SubResource("Theme_n6o2e")
+title = "Negation"
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = false
+script = ExtResource("1_qklf7")
+
+[node name="Data" type="LineEdit" parent="."]
+layout_mode = 2
+text = "v"
+editable = false

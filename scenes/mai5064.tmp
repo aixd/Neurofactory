@@ -1,0 +1,155 @@
+[gd_scene load_steps=5 format=3 uid="uid://b486dpbtpwx6o"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_okffg"]
+[ext_resource type="Texture2D" uid="uid://jk4juh4pr4os" path="res://sprites/bg.png" id="2_r57gm"]
+
+[sub_resource type="Theme" id="Theme_5u3fx"]
+default_font_size = 24
+
+[sub_resource type="Theme" id="Theme_rrj4q"]
+default_font_size = 46
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_okffg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.376471)
+position = Vector2(576.25, 324.5)
+scale = Vector2(3.85117, 3.8869)
+texture = ExtResource("2_r57gm")
+
+[node name="GraphEdit" type="GraphEdit" parent="."]
+offset_left = 144.0
+offset_top = 128.0
+offset_right = 992.0
+offset_bottom = 624.0
+scroll_offset = Vector2(-360.54, -176.1)
+show_grid = false
+snapping_enabled = false
+right_disconnects = true
+zoom = 0.54
+minimap_enabled = false
+
+[node name="AdderNeuronButton" type="Button" parent="."]
+offset_right = 114.0
+offset_bottom = 56.0
+text = "AdderNeuron"
+
+[node name="InhabitoryNeuronButton" type="Button" parent="."]
+offset_left = 130.0
+offset_right = 290.0
+offset_bottom = 56.0
+text = "InhabitoryNeuron"
+
+[node name="NegationButton" type="Button" parent="."]
+offset_left = 1.0
+offset_top = 64.0
+offset_right = 112.0
+offset_bottom = 112.0
+text = "Negation"
+
+[node name="ThresholdButton" type="Button" parent="."]
+offset_left = 130.0
+offset_top = 64.0
+offset_right = 238.0
+offset_bottom = 112.0
+text = "Threshold"
+
+[node name="DelayButton" type="Button" parent="."]
+offset_left = 264.0
+offset_top = 64.0
+offset_right = 344.0
+offset_bottom = 112.0
+text = "Delay"
+
+[node name="InputButton" type="Button" parent="."]
+offset_left = 304.0
+offset_right = 368.0
+offset_bottom = 56.0
+text = "Input"
+
+[node name="OutputButton" type="Button" parent="."]
+offset_left = 385.0
+offset_right = 449.0
+offset_bottom = 56.0
+text = "Output"
+
+[node name="Input" type="TextEdit" parent="."]
+offset_left = 1.0
+offset_top = 128.0
+offset_right = 41.0
+offset_bottom = 583.0
+
+[node name="Input2" type="TextEdit" parent="."]
+offset_left = 49.0
+offset_top = 128.0
+offset_right = 89.0
+offset_bottom = 583.0
+
+[node name="Input3" type="TextEdit" parent="."]
+offset_left = 97.0
+offset_top = 128.0
+offset_right = 137.0
+offset_bottom = 583.0
+
+[node name="Output" type="TextEdit" parent="."]
+offset_left = 1000.0
+offset_top = 128.0
+offset_right = 1040.0
+offset_bottom = 583.0
+
+[node name="Output2" type="TextEdit" parent="."]
+offset_left = 1048.0
+offset_top = 128.0
+offset_right = 1088.0
+offset_bottom = 583.0
+
+[node name="Output3" type="TextEdit" parent="."]
+offset_left = 1096.0
+offset_top = 128.0
+offset_right = 1136.0
+offset_bottom = 583.0
+
+[node name="ResetALL" type="Button" parent="."]
+offset_left = 592.0
+offset_top = 8.0
+offset_right = 680.0
+offset_bottom = 63.0
+text = "ResetALL"
+
+[node name="Step" type="Button" parent="."]
+offset_left = 712.0
+offset_top = 8.0
+offset_right = 800.0
+offset_bottom = 63.0
+theme = SubResource("Theme_5u3fx")
+text = "Step"
+
+[node name="Reload" type="Button" parent="."]
+offset_left = 824.0
+offset_top = 8.0
+offset_right = 912.0
+offset_bottom = 63.0
+theme = SubResource("Theme_5u3fx")
+text = "Reload"
+
+[node name="StepCounter" type="Label" parent="."]
+offset_left = 952.0
+offset_top = 24.0
+offset_right = 1112.0
+offset_bottom = 88.0
+theme = SubResource("Theme_rrj4q")
+text = "Steps:"
+
+[connection signal="connection_request" from="GraphEdit" to="." method="_on_graph_edit_connection_request"]
+[connection signal="disconnection_request" from="GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
+[connection signal="pressed" from="AdderNeuronButton" to="." method="createAdderNeuron"]
+[connection signal="pressed" from="InhabitoryNeuronButton" to="." method="createInhabitoryNeuron"]
+[connection signal="pressed" from="NegationButton" to="." method="createNegation"]
+[connection signal="pressed" from="ThresholdButton" to="." method="createThreshold"]
+[connection signal="pressed" from="DelayButton" to="." method="createDelay"]
+[connection signal="pressed" from="InputButton" to="." method="createInput"]
+[connection signal="pressed" from="OutputButton" to="." method="createOutput"]
+[connection signal="pressed" from="ResetALL" to="." method="ResetAll"]
+[connection signal="pressed" from="Step" to="." method="Step"]
+[connection signal="pressed" from="Reload" to="." method="Reload"]

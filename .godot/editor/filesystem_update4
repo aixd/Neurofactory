@@ -1,0 +1,13 @@
+res://scenes/main.tscn
+res://scripts/Global.gd
+res://scripts/main.gd
+res://scenes/constant.tscn
+res://scenes/input.tscn
+res://scenes/output.tscn
+res://scenes/adderNeuron.tscn
+res://scenes/inhibitoryNeuron.tscn
+res://scenes/negation.tscn
+res://scenes/delay.tscn
+res://scenes/inhibitoryNeuron2.tscn
+res://scenes/threshold.tscn
+res://scenes/RecursiveNeuron.tscn
