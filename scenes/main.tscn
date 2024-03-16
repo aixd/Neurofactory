@@ -27,19 +27,124 @@ right_disconnects = true
 zoom = 0.54
 minimap_enabled = false
 
+[node name="Channels" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Input" type="TextEdit" parent="Channels"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 116.0
+offset_right = 48.0
+offset_bottom = 280.0
+
+[node name="Input2" type="TextEdit" parent="Channels"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 289.0
+offset_right = 48.0
+offset_bottom = 450.0
+
+[node name="Input3" type="TextEdit" parent="Channels"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 464.0
+offset_right = 48.0
+offset_bottom = 639.0
+
+[node name="ExpectedOutput" type="TextEdit" parent="Channels"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 116.0
+offset_right = 109.0
+offset_bottom = 281.0
+
+[node name="ExpectedOutput2" type="TextEdit" parent="Channels"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 292.0
+offset_right = 109.0
+offset_bottom = 450.0
+
+[node name="ExpectedOutput3" type="TextEdit" parent="Channels"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 464.0
+offset_right = 112.0
+offset_bottom = 639.0
+
+[node name="ActualOutput" type="TextEdit" parent="Channels"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 115.0
+offset_right = 174.0
+offset_bottom = 280.0
+
+[node name="ActualOutput2" type="TextEdit" parent="Channels"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 291.0
+offset_right = 174.0
+offset_bottom = 449.0
+
+[node name="ActualOutput3" type="TextEdit" parent="Channels"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 463.0
+offset_right = 177.0
+offset_bottom = 638.0
+
 [node name="Buttons" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
+[node name="Neuron" type="MenuButton" parent="Buttons"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 12.0
+offset_right = 110.0
+offset_bottom = 52.0
+text = "Neuron"
+flat = false
+item_count = 3
+popup/item_0/text = "Adder"
+popup/item_0/id = 0
+popup/item_1/text = "Inhib1"
+popup/item_1/id = 1
+popup/item_2/text = "Inhib2"
+popup/item_2/id = 2
+
+[node name="Myelin" type="MenuButton" parent="Buttons"]
+layout_mode = 0
+offset_left = 136.0
+offset_top = 12.0
+offset_right = 238.0
+offset_bottom = 52.0
+text = "Myelin"
+flat = false
+item_count = 4
+popup/item_0/text = "Negation"
+popup/item_0/id = 0
+popup/item_1/text = "Threshold"
+popup/item_1/id = 1
+popup/item_2/text = "Delay"
+popup/item_2/id = 2
+popup/item_3/text = "Constant"
+popup/item_3/id = 3
+
 [node name="AdderNeuronButton" type="Button" parent="Buttons"]
+visible = false
 layout_mode = 0
 offset_right = 114.0
 offset_bottom = 56.0
 text = "AdderNeuron"
 
 [node name="InhibitoryNeuronButton" type="Button" parent="Buttons"]
+visible = false
 layout_mode = 0
 offset_left = 130.0
 offset_right = 238.0
@@ -47,6 +152,7 @@ offset_bottom = 56.0
 text = "Inhibitory-1"
 
 [node name="InhibitoryNeuronButton2" type="Button" parent="Buttons"]
+visible = false
 layout_mode = 0
 offset_left = 252.0
 offset_right = 360.0
@@ -54,6 +160,7 @@ offset_bottom = 56.0
 text = "Inhibitory-2"
 
 [node name="NegationButton" type="Button" parent="Buttons"]
+visible = false
 layout_mode = 0
 offset_left = 1.0
 offset_top = 64.0
@@ -62,6 +169,7 @@ offset_bottom = 112.0
 text = "Negation"
 
 [node name="ThresholdButton" type="Button" parent="Buttons"]
+visible = false
 layout_mode = 0
 offset_left = 130.0
 offset_top = 64.0
@@ -70,6 +178,7 @@ offset_bottom = 112.0
 text = "Threshold"
 
 [node name="DelayButton" type="Button" parent="Buttons"]
+visible = false
 layout_mode = 0
 offset_left = 248.0
 offset_top = 64.0
@@ -78,6 +187,7 @@ offset_bottom = 112.0
 text = "Delay"
 
 [node name="Constant" type="Button" parent="Buttons"]
+visible = false
 layout_mode = 0
 offset_left = 338.0
 offset_top = 64.0
@@ -87,79 +197,82 @@ text = "Constant"
 
 [node name="InputButton" type="Button" parent="Buttons"]
 layout_mode = 0
-offset_left = 381.0
-offset_right = 445.0
-offset_bottom = 56.0
+offset_left = 256.0
+offset_top = 16.0
+offset_right = 320.0
+offset_bottom = 60.0
 text = "Input"
 
 [node name="OutputButton" type="Button" parent="Buttons"]
 layout_mode = 0
-offset_left = 462.0
-offset_right = 526.0
-offset_bottom = 56.0
+offset_left = 264.0
+offset_top = 72.0
+offset_right = 328.0
+offset_bottom = 120.0
 text = "Output"
 
 [node name="ChooseLevel" type="Button" parent="Buttons"]
 layout_mode = 0
-offset_left = 432.0
-offset_top = 64.0
-offset_right = 538.0
-offset_bottom = 112.0
+offset_left = 140.0
+offset_top = 62.0
+offset_right = 246.0
+offset_bottom = 102.0
 text = "ChooseLevel"
 
-[node name="Input" type="TextEdit" parent="."]
-offset_left = 1.0
-offset_top = 116.0
-offset_right = 48.0
-offset_bottom = 280.0
+[node name="ResetALL" type="Button" parent="Buttons"]
+layout_mode = 0
+offset_left = 352.0
+offset_top = 16.0
+offset_right = 440.0
+offset_bottom = 60.0
+text = "ResetALL"
 
-[node name="Input2" type="TextEdit" parent="."]
-offset_left = 1.0
-offset_top = 289.0
-offset_right = 48.0
-offset_bottom = 450.0
+[node name="Step" type="Button" parent="Buttons"]
+layout_mode = 0
+offset_left = 352.0
+offset_top = 72.0
+offset_right = 440.0
+offset_bottom = 116.0
+theme = SubResource("Theme_5u3fx")
+text = "Step"
 
-[node name="Input3" type="TextEdit" parent="."]
-offset_left = 1.0
-offset_top = 464.0
-offset_right = 48.0
-offset_bottom = 639.0
+[node name="Run" type="Button" parent="Buttons"]
+layout_mode = 0
+offset_left = 504.0
+offset_top = 12.0
+offset_right = 671.0
+offset_bottom = 54.0
+theme = SubResource("Theme_5u3fx")
+text = "Run/Pause"
 
-[node name="ExpectedOutput" type="TextEdit" parent="."]
-offset_left = 60.0
-offset_top = 116.0
-offset_right = 109.0
-offset_bottom = 281.0
+[node name="Reload" type="Button" parent="Buttons"]
+layout_mode = 0
+offset_left = 920.0
+offset_top = 84.0
+offset_right = 1008.0
+offset_bottom = 126.0
+theme = SubResource("Theme_5u3fx")
+text = "Reload"
 
-[node name="ExpectedOutput2" type="TextEdit" parent="."]
-offset_left = 60.0
-offset_top = 292.0
-offset_right = 109.0
-offset_bottom = 450.0
+[node name="ChangeVMode" type="Button" parent="Buttons"]
+visible = false
+layout_mode = 0
+offset_left = 648.0
+offset_top = 176.0
+offset_right = 768.0
+offset_bottom = 224.0
+theme = SubResource("Theme_5u3fx")
+theme_override_font_sizes/font_size = 16
+toggle_mode = true
+text = "ChangeVMode"
+flat = true
 
-[node name="ExpectedOutput3" type="TextEdit" parent="."]
-offset_left = 60.0
-offset_top = 464.0
-offset_right = 112.0
-offset_bottom = 639.0
-
-[node name="ActualOutput" type="TextEdit" parent="."]
-offset_left = 125.0
-offset_top = 115.0
-offset_right = 174.0
-offset_bottom = 280.0
-
-[node name="ActualOutput2" type="TextEdit" parent="."]
-offset_left = 125.0
-offset_top = 291.0
-offset_right = 174.0
-offset_bottom = 449.0
-
-[node name="ActualOutput3" type="TextEdit" parent="."]
-offset_left = 125.0
-offset_top = 463.0
-offset_right = 177.0
-offset_bottom = 638.0
+[node name="temptext" type="TextEdit" parent="."]
+visible = false
+offset_left = 481.0
+offset_top = 280.0
+offset_right = 530.0
+offset_bottom = 438.0
 
 [node name="Description" type="TextEdit" parent="."]
 offset_left = 884.0
@@ -167,45 +280,13 @@ offset_top = -2.0
 offset_right = 1148.0
 offset_bottom = 80.0
 
-[node name="ResetALL" type="Button" parent="."]
-offset_left = 545.0
-offset_top = 4.0
-offset_right = 633.0
-offset_bottom = 59.0
-text = "ResetALL"
-
-[node name="Step" type="Button" parent="."]
-offset_left = 640.0
-offset_top = 4.0
-offset_right = 728.0
-offset_bottom = 59.0
-theme = SubResource("Theme_5u3fx")
-text = "Step"
-
-[node name="Reload" type="Button" parent="."]
-offset_left = 544.0
-offset_top = 64.0
-offset_right = 632.0
-offset_bottom = 112.0
-theme = SubResource("Theme_5u3fx")
-text = "Reload"
-
-[node name="ChangeVMode" type="Button" parent="."]
-offset_left = 640.0
-offset_top = 64.0
-offset_right = 760.0
-offset_bottom = 112.0
-theme = SubResource("Theme_5u3fx")
-theme_override_font_sizes/font_size = 16
-text = "ChangeVMode"
-
 [node name="StepCounter" type="Label" parent="."]
 offset_left = 760.0
 offset_top = -2.0
 offset_right = 920.0
 offset_bottom = 62.0
 theme_override_font_sizes/font_size = 31
-text = "Steps:"
+text = "Step:"
 
 [node name="Cost" type="Label" parent="."]
 offset_left = 760.0
@@ -221,12 +302,13 @@ offset_top = 80.0
 offset_right = 920.0
 offset_bottom = 144.0
 theme_override_font_sizes/font_size = 31
-text = "Test:"
+text = "Case: 1/1"
 
 [node name="SelectTest" type="SpinBox" parent="."]
-offset_left = 1064.0
+visible = false
+offset_left = 1048.0
 offset_top = 84.0
-offset_right = 1147.06
+offset_right = 1131.06
 offset_bottom = 120.0
 min_value = 1.0
 max_value = 1.0
@@ -245,6 +327,85 @@ access = 2
 filters = PackedStringArray("*.txt")
 use_native_dialog = true
 
+[node name="VSensitive" type="CheckButton" parent="."]
+offset_left = 8.0
+offset_top = 64.0
+offset_right = 140.0
+offset_bottom = 95.0
+focus_mode = 0
+button_pressed = true
+text = "V Sensitive"
+
+[node name="AutoPause" type="CheckButton" parent="."]
+offset_left = 520.0
+offset_top = 92.0
+offset_right = 652.0
+offset_bottom = 123.0
+focus_mode = 0
+button_pressed = true
+text = "AutoPause"
+
+[node name="VMode" type="CheckButton" parent="."]
+visible = false
+offset_left = 552.0
+offset_top = 92.0
+offset_right = 684.0
+offset_bottom = 128.0
+focus_mode = 0
+button_pressed = true
+text = "Show V"
+
+[node name="TestControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1032.0
+offset_top = 88.0
+offset_right = 1128.0
+offset_bottom = 120.0
+
+[node name="PrevTest" type="Button" parent="TestControl"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+focus_mode = 0
+text = "<"
+flat = true
+
+[node name="TestNumber" type="Label" parent="TestControl"]
+layout_mode = 0
+offset_left = 19.0
+offset_right = 74.0
+offset_bottom = 31.0
+text = "Case 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NextTest" type="Button" parent="TestControl"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 76.0
+offset_right = 94.0
+offset_bottom = 31.0
+focus_mode = 0
+text = ">"
+flat = true
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="HSlider" type="HSlider" parent="."]
+offset_left = 664.0
+offset_top = 84.0
+offset_right = 823.0
+offset_bottom = 100.0
+rotation = -3.14159
+min_value = 0.05
+max_value = 1.0
+step = 0.05
+value = 1.0
+exp_edit = true
+tick_count = 3
+ticks_on_borders = true
+
 [connection signal="connection_request" from="GraphEdit" to="." method="_on_graph_edit_connection_request"]
 [connection signal="disconnection_request" from="GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
 [connection signal="pressed" from="Buttons/AdderNeuronButton" to="." method="createAdderNeuron"]
@@ -257,9 +418,15 @@ use_native_dialog = true
 [connection signal="pressed" from="Buttons/InputButton" to="." method="createInput"]
 [connection signal="pressed" from="Buttons/OutputButton" to="." method="createOutput"]
 [connection signal="pressed" from="Buttons/ChooseLevel" to="." method="_on_choose_level_pressed"]
-[connection signal="pressed" from="ResetALL" to="." method="ResetAll"]
-[connection signal="pressed" from="Step" to="." method="Step"]
-[connection signal="pressed" from="Reload" to="." method="Reload"]
-[connection signal="pressed" from="ChangeVMode" to="." method="_on_change_v_mode_pressed"]
+[connection signal="pressed" from="Buttons/ResetALL" to="." method="ResetAll"]
+[connection signal="pressed" from="Buttons/Step" to="." method="Step"]
+[connection signal="pressed" from="Buttons/Run" to="." method="_toggle_auto_run"]
+[connection signal="pressed" from="Buttons/Reload" to="." method="Reload"]
+[connection signal="pressed" from="Buttons/ChangeVMode" to="." method="_on_change_v_mode_pressed"]
 [connection signal="value_changed" from="SelectTest" to="." method="_on_select_test_value_changed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="pressed" from="AutoPause" to="." method="_toggle_auto_pause"]
+[connection signal="pressed" from="TestControl/PrevTest" to="." method="prev_test"]
+[connection signal="pressed" from="TestControl/NextTest" to="." method="next_test"]
+[connection signal="timeout" from="Timer" to="." method="Step"]
+[connection signal="value_changed" from="HSlider" to="." method="_on_timer_changed"]

@@ -20,22 +20,20 @@ func Act():
 
 
 func _gui_input(event : InputEvent):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_RIGHT and event.is_pressed():
-			#self.clear_all_slots() 通过禁用插槽无法将这些线给删除！
-			if self.type == Global.Type.INPUT:
-				Global.input_counter -=1
-			elif self.type == Global.Type.OUTPUT:
-				Global.output_counter -=1
-			var graph = self.get_parent()
-			var connection_list = graph.get_connection_list()
-			for connection in connection_list:
-				if connection["from_node"]== self.name:
-					graph.disconnect_node(connection["from_node"],connection["from_port"],connection["to_node"],connection["to_port"])
-				if connection["to_node"]== self.name:
-					graph.disconnect_node(connection["from_node"],connection["from_port"],connection["to_node"],connection["to_port"])
-			Global.cost -=1	
-			#print(self.get_tree().get_root().get_name())
-			self.get_tree().get_root().get_node("Main").get_node("Cost").text = "Cost:" + str(Global.cost) 	
-			self.queue_free()
+	if event.is_action_pressed("delete_node") and \
+	Global.running_state == Global.RunningState.IDLE:
+		if self.type == Global.Type.INPUT:
+			Global.input_counter -=1
+		if self.type == Global.Type.OUTPUT:
+			Global.output_counter -=1
+		var graph = self.get_parent()
+		var connection_list = graph.get_connection_list()
+		for c in connection_list:
+			if c["from_node"] == self.name or c["to_node"] == self.name:
+				graph.disconnect_node(c["from_node"],c["from_port"],c["to_node"],c["to_port"])
+		Global.cost -=1
+		#print(self.get_tree().get_root().get_name())
+		self.get_tree().get_root().get_node("Main").get_node("Cost").text = "Cost:" + str(Global.cost)
+		self.get_tree().get_root().get_node("Main").ResetAll()
+		self.queue_free()
 			

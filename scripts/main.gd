@@ -17,6 +17,37 @@ var constant = preload("res://scenes/constant.tscn")
 @onready var graph = $GraphEdit
 @onready var cost = $Cost
 @onready var test = $Test
+
+@onready var file_dialog = $FileDialog
+@onready var level_description = $Description
+@onready var select_test = $SelectTest
+
+@onready var input_lines = [
+	$Channels/Input, 
+	$Channels/Input2, 
+	$Channels/Input3,
+]
+
+@onready var expected_output_lines = [
+	$Channels/ExpectedOutput, 
+	$Channels/ExpectedOutput2, 
+	$Channels/ExpectedOutput3,
+]
+
+@onready var actual_output_lines = [
+	$Channels/ActualOutput,
+	$Channels/ActualOutput2,
+	$Channels/ActualOutput3,
+]
+
+@onready var current_test_number = $TestControl/TestNumber
+
+@onready var current_v_sensitive = $VSensitive
+@onready var timer = $Timer
+@onready var timer_length = $HSlider
+
+@onready var neuron = $Buttons/Neuron
+@onready var myelin = $Buttons/Myelin
 #@onready var curList = []
 #@onready var preList = []
 #var Global.steps = 0
@@ -27,25 +58,20 @@ var constant = preload("res://scenes/constant.tscn")
 #@onready var lines = []
 # Called when the node enters the scene tree for the first time.
 
+var output_counter = [0,0,0]
+var judge_output_lines = [[], [], []]
 
-@onready var file_dialog = $FileDialog
-@onready var level_description = $Description
-@onready var select_test = $SelectTest
+
+
+
+
+var max_test_number = 1
+var v_sensitive = 1
+var auto_run = false
+var auto_pause = true
+
 
 var max_order = 1
-
-@onready var input_lines1 = $Input
-@onready var input_lines2 = $Input2
-@onready var input_lines3 = $Input3
-
-@onready var actual_output_line1 = $ActualOutput
-@onready var actual_output_line2 = $ActualOutput2
-@onready var actual_output_line3 = $ActualOutput3
-
-@onready var expected_output_line1 = $ExpectedOutput
-@onready var expected_output_line2 = $ExpectedOutput2
-@onready var expected_output_line3 = $ExpectedOutput3
-
 
 
 #@onready var expected_output_lines
@@ -55,118 +81,89 @@ var max_order = 1
 func _ready():
 	Global.input_counter = 0
 	Global.output_counter = 0
-	pass # Replace with function body.
+	
+	
+	Global.running_state = Global.RunningState.IDLE
+	
+	neuron.get_popup().id_pressed.connect(_add_neuron)
+	myelin.get_popup().id_pressed.connect(_add_myelin)
+	
+
+func _add_neuron(id):
+	match id:
+		0:createAdderNeuron()
+		1:createInhibitoryNeuron()
+		2:createInhibitoryNeuron2()
+		
+func _add_myelin(id):
+	match id:
+		0:createNegation()
+		1:createThreshold()
+		2:createDelay()
+		3:createConstant()
+
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
 
+func neuron_menu():
+	
+	print()
+	pass
+
 func createConstant():
-	var newConstant = constant.instantiate()
-	graph.add_child(newConstant)
-	update_cost() 
+	add_to_graph(constant.instantiate())
 
 func createDelay():
-	var newDelay = delay.instantiate()
-	graph.add_child(newDelay)
-	update_cost() 
+	add_to_graph(delay.instantiate())
+	
 func createAdderNeuron():
-	var newAdderNeuron = adderNeuron.instantiate()
-	graph.add_child(newAdderNeuron)
-	update_cost() 
-	pass # Replace with function body.
+	add_to_graph(adderNeuron.instantiate())
 	
 func createInhibitoryNeuron():
-	var newInhibitoryNeuron = inhibitoryNeuron.instantiate()
-	graph.add_child(newInhibitoryNeuron)
-	update_cost() 
-	pass # Replace with function body.
+	add_to_graph(inhibitoryNeuron.instantiate())
 	
 func createInhibitoryNeuron2():
-	var newInhibitoryNeuron2 = inhibitoryNeuron2.instantiate()
-	graph.add_child(newInhibitoryNeuron2)
-	update_cost() 
-	pass
+	add_to_graph(inhibitoryNeuron2.instantiate())
+
 func createNegation():
-	var newNegation = negation.instantiate()
-	graph.add_child(newNegation)
-	update_cost() 
+	add_to_graph(negation.instantiate())
 
 func createThreshold():
-	var newThreshold = threshold.instantiate()
-	graph.add_child(newThreshold)
-	update_cost() 
+	add_to_graph(threshold.instantiate())
 
 func createInput():
-	
-	#Global.input_counter += 1
-	#if Global.input_counter <=3:
-		#var newInput = input.instantiate()
-		#graph.add_child(newInput)
-		#if Global.input_counter > 1:
-			#newInput.title = "Input" + str(Global.input_counter
-			#)
-			#newInput.name = "Input" + str(Global.input_counter
-			#)
-	#else:
-		#Global.input_counter = 3
-		
-	
-	if Global.input_counter < 1:
-		Global.input_counter += 1	
-		var newInput = input.instantiate()
-		graph.add_child(newInput)
-		update_cost() 
+	if Global.input_counter == 0:
+		Global.input_counter = 1
+		add_to_graph(input.instantiate())
 		
 	pass # Replace with function body. 
 	
 func createOutput():
-	#Global.output_counter += 1
-	#
-	#if Global.output_counter <=3:
-		#
-		#var newOutput = output.instantiate()
-		#graph.add_child(newOutput)
-		#if Global.output_counter > 1:
-			#newOutput.title = "Output" + str(Global.output_counter
-			#)
-			#newOutput.name = "Output" + str(Global.output_counter
-			#)
-	#else:
-		#Global.output_counter=3
-	if Global.output_counter < 1:
-		Global.output_counter += 1	
-		var newOutput = output.instantiate()
-		graph.add_child(newOutput)
-		update_cost() 
+	if Global.output_counter == 0:
+		Global.output_counter = 1
+		add_to_graph(output.instantiate())
 	
-	pass # Replace with function body.
+func add_to_graph(node):
+	if Global.running_state == Global.RunningState.IDLE:
+		graph.add_child(node)
+		update_cost()
+		
+	pass
+
 
 func _on_graph_edit_connection_request(from_node, from_port, to_node, to_port):
-	#print(typeof(from_node))
 	var FROM_NODE = graph.get_node(str(from_node))
 	var TO_NODE = graph.get_node(str(to_node))
-	
-	#var from_node_output_port_count = FROM_NODE.get_output_port_count()
-	#var to_node_input_port_count = TO_NODE.get_output_port_count()
-	##var can_be_connnected = true
-	#
-	#for i in range(from_node_output_port_count):
-		#if graph.is_node_connected(from_node,i,to_node,to_port):
-			#return
-	#这下每个输入端口只能接一条线，但不影响输出端口拉多条线
 	
 	var connection_list_ = graph.get_connection_list()
 	for connection in connection_list_:
 		if connection["to_port"]==to_port and connection["to_node"]==to_node:
 			return
-	#这下每个输入端口只能接一条线，但不影响输出端口拉多条线
 	
-	
-	
-	
-	
+	#每个输入端口只能接一条线，但不影响输出端口拉多条线
 	if FROM_NODE.type == Global.Type.INPUT:
 		if TO_NODE.type == Global.Type.NEGATION or TO_NODE.type == Global.Type.THRESHOLD or TO_NODE.type == Global.Type.DELAY:
 			return
@@ -196,13 +193,13 @@ func Debug():
 	print(null)
 	
 func Step():
+	
+	Global.running_state = Global.RunningState.RUNNING
+	
 	#print(null) 即使是null也会被打印出来
 	#print() 只有括号里面什么都不加才一点都不显示
 	if Global.steps == 0:
-		input = graph.get_node("Input")
-		#input2 = graph.get_node("Input2") #没找到就会返回null
-		#input3 = graph.get_node("Input3")
-		#这三个input是位于graphedit的子节点，不是main的子节点
+		var input_node = graph.get_node("Input")
 		connection_list = graph.get_connection_list()
 		#print(connection_list)
 		for child in graph.get_children():
@@ -211,14 +208,15 @@ func Step():
 		
 				
 		for node in node_list:
+			print(node.name)
 			if node.type != Global.Type.INPUT:
-				for connection in connection_list:
-					if connection["to_node"] == node.name:
+				for c in connection_list:
+					if c["to_node"] == node.name:
 						#print(typeof(connection["from_port"])) #这个connection["from_port"]返回的确实是int类型 
-						node.input_node_lists.append([graph.get_node(str(connection["from_node"])),connection["from_port"],connection["to_port"]])#感觉是最重要的一步
+						node.input_node_lists.append([graph.get_node(str(c["from_node"])),c["from_port"],c["to_port"]])#感觉是最重要的一步
 						
 						if !node.is_neuron:
-							node.pre_node = graph.get_node(str(connection["from_node"]))
+							node.pre_node = graph.get_node(str(c["from_node"]))
 							print("Debug is_neuron")
 						
 						
@@ -245,53 +243,14 @@ func Step():
 		# print(node_list)
 		
 		
-		
-		
-		if input !=null:
-			input_lines1 = $Input
-			input_lines2 = $Input2
-			input_lines3 = $Input3
-			var line_count1 = input_lines1.get_line_count()
-			var line_count2 = input_lines2.get_line_count()
-			var line_count3 = input_lines3.get_line_count()
-			
-			for i in range(line_count1):  # 遍历所有行
-				var line = input_lines1.get_line(i)  # 获取每行文本
-				input.input_lines1.append(line)  # 将文本添加到数组中
-			for i in range(line_count2):  # 遍历所有行
-				var line = input_lines2.get_line(i)  # 获取每行文本
-				input.input_lines2.append(line)
-			for i in range(line_count3):  # 遍历所有行
-				var line = input_lines3.get_line(i)  # 获取每行文本
-				input.input_lines3.append(line)	
+		if input_node !=null:
+			for i in range(3):
+				for line in range(input_lines[i].get_line_count()):  # 遍历所有行
+					input_node.input_lines[i].append(input_lines[i].get_line(line))
 				
-			input.GetInput(Global.steps)
+			input_node.GetInput(Global.steps)
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-			
-		#if input2 !=null:
-			#var input_lines2 = $Input2
-			#var line_count2 = input_lines2.get_line_count()
-			#for i in range(line_count2):  # 遍历所有行
-				#var line = input_lines2.get_line(i)  # 获取每行文本
-				#input2.input_lines.append(line)  # 将文本添加到数组中
-			#input2.GetInput(Global.steps)
-			#
-		#if input3 !=null:
-			#var input_lines3 = $Input3
-			#var line_count3 = input_lines3.get_line_count()
-			#for i in range(line_count3):  # 遍历所有行
-				#var line = input_lines3.get_line(i)  # 获取每行文本
-				#input3.input_lines.append(line)  # 将文本添加到数组中
-			#input3.GetInput(Global.steps)
 		for i in range(1,max_order+1):
 			for node in node_list:
 				if !node.is_neuron and node.order ==i and node.type == Global.Type.DELAY:
@@ -303,23 +262,11 @@ func Step():
 				node.Act()
 				#只用执行一次就够了吧
 		
-		#input.get_node("Data").text = lines[Global.steps]
 		$StepCounter.text = "Steps:" + str(Global.steps)
 		Global.steps +=1
 		
 		
 	elif Global.steps !=0:
-		#input.get_node("Data").text = lines[Global.steps]
-		
-		#for node in node_list:
-			#if node.is_neuron:
-				#node.Update()
-		#
-		#for i in range(1,max_order+1):
-			#for node in node_list:
-				#if !node.is_neuron and node.order ==i:
-					#node.Update()
-					
 		for node in node_list:
 			node.Update()
 					
@@ -328,45 +275,53 @@ func Step():
 		
 			
 		for node in node_list:
-			if node.type == Global.Type.INPUT:
-				node.GetInput(Global.steps)
-			elif node.type == Global.Type.ADDER:
-				node.Act()
-			elif node.type == Global.Type.INHIBITORY or node.type == Global.Type.INHIBITORY2:
-				node.Act()
-			#elif node.type == Global.Type.CONSTANT:
-				#node.Act()
-			elif node.type == Global.Type.OUTPUT:
-				node.Act()
-				#print(node.cache)
-				#if node.cur_states[0] == Global.State.ACTIVATE:
-					#
-					#if node.name == "Output":
-						#$Output.insert_line_at($Output.get_line_count()-1,node.cur_datas[0])
-					#if node.name == "Output2":
-						#$Output2.insert_line_at($Output2.get_line_count()-1,node.cur_datas[0])
-					#if node.name == "Output3":
-						#$Output3.insert_line_at($Output3.get_line_count()-1,node.cur_datas[0])	
-				#elif node.cur_states[0] == Global.State.INACTIVATE:
-					#print(true)
-					#if node.name == "Output":
-						#$Output.insert_line_at($Output.get_line_count()-1,"v")
-					#if node.name == "Output2":
-						#$Output2.insert_line_at($Output2.get_line_count()-1,"v")
-					#if node.name == "Output3":
-						#$Output3.insert_line_at($Output3.get_line_count()-1,"v")	
-						##print(node.cur_data)
-				#var output_lines1 = $Output
-				#var output_lines2 = $Output2
-				#var output_lines3 = $Output3
-				var output_lines_list = [actual_output_line1,actual_output_line2,actual_output_line3]
-				for i in range(3):
-					if node.cur_states[i] == Global.State.ACTIVATE:
-						output_lines_list[i].insert_line_at(output_lines_list[i].get_line_count()-1,node.cur_datas[i])
-					else:
-						if Global.current_v_mode == Global.VMode.SHOW:
-							output_lines_list[i].insert_line_at(output_lines_list[i].get_line_count()-1,"v")
+			
+			match node.type:
+				Global.Type.INPUT:
+					node.GetInput(Global.steps)
+				Global.Type.ADDER, \
+				Global.Type.INHIBITORY, \
+				Global.Type.INHIBITORY2:
+					node.Act()
 				
+				
+				Global.Type.OUTPUT:
+					node.Act()
+					
+					#output display
+					for i in range(3):
+						if node.cur_states[i] == Global.State.ACTIVATE:
+							actual_output_lines[i].insert_line_at(actual_output_lines[i].get_line_count()-1,node.cur_datas[i])
+							if node.cur_datas[i] != expected_output_lines[i].get_line(output_counter[i]) and auto_pause:
+								_stop_auto_run()
+							else:
+								output_counter[i] += 1
+						#only apply when v-mode is show and the output is v
+						elif Global.current_v_mode == Global.VMode.SHOW:
+							actual_output_lines[i].insert_line_at(actual_output_lines[i].get_line_count()-1,"v")
+							print(node.cur_datas[i])
+							print(expected_output_lines[i].get_line(output_counter[i]))
+							if node.cur_datas[i] != expected_output_lines[i].get_line(output_counter[i]) and output_counter[i] != 0 and auto_pause:
+								_stop_auto_run()
+					
+					'
+					var output_lines_list = display_output_lines
+					for i in range(3):
+						if node.cur_states[i] == Global.State.ACTIVATE:
+							output_lines_list[i].insert_line_at(output_lines_list[i].get_line_count()-1,node.cur_datas[i])
+						#only apply when v-mode is show and the output is v
+						elif Global.current_v_mode == Global.VMode.SHOW:
+								output_lines_list[i].insert_line_at(output_lines_list[i].get_line_count()-1,"v")
+			'
+			
+			
+			
+			#solution judgement
+			'
+			for i in range(3):
+				actual_output_lines[i][]
+				pass
+			'
 				
 				
 				
@@ -388,34 +343,34 @@ func Step():
 		
 		
 		
-		$StepCounter.text = "Steps:" + str(Global.steps)
+		$StepCounter.text = "Step:" + str(Global.steps)
 		Global.steps +=1
 	pass
 	
 func Reload():
 	get_tree().reload_current_scene()
 	
-	#print(input)
-	#print(list)
 
 func ResetAll():
 	for node in node_list:
-		#node.Reset()
-		node and node.Reset()
-		#node ? node.Reset() : null
-		#node?.Reset()
+		node.Reset()
+		
+		# node and node.Reset()
+	
+	Global.running_state = Global.RunningState.IDLE
 	
 	Global.steps = 0
 	
-	$StepCounter.text = "Steps:"
+	$StepCounter.text = "Step:"
 	
-	actual_output_line1.clear()
-	actual_output_line2.clear()
-	actual_output_line3.clear()
-	#Global.input_counter = 0
-	#Global.output_counter = 0
+	for i in range(3):
+		actual_output_lines[i].clear()
+		output_counter[i] = 0
+	
 	connection_list.clear()
 	node_list.clear()
+	
+	_stop_auto_run()
 
 
 func _on_choose_level_pressed():
@@ -428,53 +383,22 @@ func _on_choose_level_pressed():
 
 
 func _on_file_dialog_file_selected(path):
+	
+	Global.current_test_index = 1
+	
 	var config = ConfigFile.new()
 	config.set_value("CurrentLevelPath","current_level_path",path)
 	config.save("user://CurrentLevelPath.cfg")
 	read_level()
-	#var file = FileAccess.open(path, FileAccess.READ)
-	#var content = file.get_as_text()
-	#var lines = content.split("\n")
-	#level_description.text = "{0}\n{1}\n".format([lines[0],lines[1]],"{_}")
-	#test.text = "test:{0}/{1}".format([Global.current_test_index,lines[3]],"{_}")
-	
-	#var i1 = lines[2].split(",")
-	#var i2 = lines[3].split(",")
-	#var i3 = lines[4].split(",")
-	
-	#var e1 = lines[5].split(",")
-	#var e2 = lines[6].split(",")
-	#var e3 = lines[7].split(",")
-	#for i in range(i1.size()):
-		#input_lines1.insert_line_at(i,i1[i])
-	#for i in range(i2.size()):
-		#input_lines2.insert_line_at(i,i2[i])
-	#for i in range(i3.size()):
-		#input_lines3.insert_line_at(i,i3[i])	
-	#
-	#
-	#for i in range(e1.size()):
-		#expected_output_line1.insert_line_at(i,e1[i])
-	#for i in range(e2.size()):
-		#expected_output_line2.insert_line_at(i,e2[i])
-	#for i in range(e3.size()):
-		#expected_output_line3.insert_line_at(i,e3[i])
-#
-	
-	
-
-	pass # Replace with function body.
 
 
 
 
 func read_level():
-	input_lines1.clear()
-	input_lines2.clear()
-	input_lines3.clear()
-	expected_output_line1.clear()
-	expected_output_line2.clear()
-	expected_output_line3.clear()
+	
+	for i in range(3):
+		input_lines[i].clear()
+		expected_output_lines[i].clear()
 	
 	var config =  ConfigFile.new()
 	config.load("user://CurrentLevelPath.cfg")
@@ -483,49 +407,25 @@ func read_level():
 	
 	var file = FileAccess.open(path, FileAccess.READ)
 	var content = file.get_as_text()
-	var lines = content.split("\n")
-	level_description.text = "{0}\n{1}\n".format([lines[0],lines[1]],"{_}")
-	test.text = "test:{0}/{1}".format([Global.current_test_index,lines[3]],"{_}")
-	select_test.max_value = int(lines[3])
+	var line = content.split("\n")
 	
-	var i1 = lines[5+(Global.current_test_index-1)*7].split(",")
-	var i2 = lines[6+(Global.current_test_index-1)*7].split(",")
-	var i3 = lines[7+(Global.current_test_index-1)*7].split(",")
+	#set name and despcription
+	level_description.text = "{0}\n{1}\n".format([line[0],line[1]],"{_}")
 	
-	var e1 = lines[8+(Global.current_test_index-1)*7].split(",")
-	var e2 = lines[9+(Global.current_test_index-1)*7].split(",")
-	var e3 = lines[10+(Global.current_test_index-1)*7].split(",")
+	v_sensitive = int(line[2])
+	max_test_number = int(line[3])
 	
+	var reading_line
+	for i in range(3):
+		reading_line = line[i+5+(Global.current_test_index-1)*7].split(",")
+		for line_number in range(reading_line.size()):
+			input_lines[i].insert_line_at(line_number, reading_line[line_number])
+		reading_line = line[i+8+(Global.current_test_index-1)*7].split(",")
+		for line_number in range(reading_line.size()):
+			expected_output_lines[i].insert_line_at(
+				line_number, reading_line[line_number])
 	
-	for i in range(i1.size()):
-		input_lines1.insert_line_at(i,i1[i])
-	for i in range(i2.size()):
-		input_lines2.insert_line_at(i,i2[i])
-	for i in range(i3.size()):
-		input_lines3.insert_line_at(i,i3[i])	
-	
-	
-	for i in range(e1.size()):
-		expected_output_line1.insert_line_at(i,e1[i])
-	for i in range(e2.size()):
-		expected_output_line2.insert_line_at(i,e2[i])
-	for i in range(e3.size()):
-		expected_output_line3.insert_line_at(i,e3[i])
-	
-	
-	
-	#print(path)
-	
-	pass
-
-
-
-
-
-
-
-
-
+	update_display()
 
 func _on_change_v_mode_pressed():
 	if Global.current_v_mode == Global.VMode.SHOW:
@@ -541,5 +441,57 @@ func _on_change_v_mode_pressed():
 
 func _on_select_test_value_changed(value):
 	Global.current_test_index = value
+	ResetAll()
 	read_level()
+	pass # Replace with function body.
+
+
+func prev_test():
+	if Global.current_test_index != 1:
+		Global.current_test_index -= 1
+		ResetAll()
+		read_level()
+
+	pass # Replace with function body.
+
+
+func next_test():
+	if Global.current_test_index < max_test_number:
+		Global.current_test_index += 1
+		ResetAll()
+		read_level()
+	pass # Replace with function body.
+	
+func update_display():
+	
+	test.text = "test:{0}/{1}".format([Global.current_test_index, max_test_number],"{_}")
+	current_test_number.text = "Case {0}".format([Global.current_test_index])
+	current_v_sensitive.button_pressed = bool(v_sensitive)
+	
+	
+	pass
+
+
+func _toggle_auto_run():
+	auto_run = not auto_run
+	
+	if auto_run:
+		timer.start()
+	else:
+		timer.stop()
+	pass # Replace with function body.
+	
+func _stop_auto_run():
+	auto_run = false
+	timer.stop()
+
+
+	
+func _on_timer_changed(value):
+	timer.wait_time = value
+	
+
+
+func _toggle_auto_pause():
+	auto_pause = not auto_pause
 	pass # Replace with function body.
