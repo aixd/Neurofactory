@@ -28,13 +28,13 @@ var constant = preload("res://scenes/constant.tscn")
 	$Channels/Input3,
 ]
 
-@onready var expected_output_lines = [
+@onready var expected_output = [
 	$Channels/ExpectedOutput, 
 	$Channels/ExpectedOutput2, 
 	$Channels/ExpectedOutput3,
 ]
 
-@onready var actual_output_lines = [
+@onready var actual_output = [
 	$Channels/ActualOutput,
 	$Channels/ActualOutput2,
 	$Channels/ActualOutput3,
@@ -66,15 +66,13 @@ var judge_output_lines = [[], [], []]
 
 
 var max_test_number = 1
-var v_sensitive = 1
+var v_sensitive = true
 var auto_run = false
 var auto_pause = true
 
 
 var max_order = 1
 
-
-#@onready var expected_output_lines
 
 
 
@@ -287,49 +285,8 @@ func Step():
 				
 				Global.Type.OUTPUT:
 					node.Act()
+					_display_and_judge_output(node)
 					
-					#output display
-					for i in range(3):
-						if node.cur_states[i] == Global.State.ACTIVATE:
-							actual_output_lines[i].insert_line_at(actual_output_lines[i].get_line_count()-1,node.cur_datas[i])
-							if node.cur_datas[i] != expected_output_lines[i].get_line(output_counter[i]) and auto_pause:
-								_stop_auto_run()
-							else:
-								output_counter[i] += 1
-						#only apply when v-mode is show and the output is v
-						elif Global.current_v_mode == Global.VMode.SHOW:
-							actual_output_lines[i].insert_line_at(actual_output_lines[i].get_line_count()-1,"v")
-							print(node.cur_datas[i])
-							print(expected_output_lines[i].get_line(output_counter[i]))
-							if node.cur_datas[i] != expected_output_lines[i].get_line(output_counter[i]) and output_counter[i] != 0 and auto_pause:
-								_stop_auto_run()
-					
-					'
-					var output_lines_list = display_output_lines
-					for i in range(3):
-						if node.cur_states[i] == Global.State.ACTIVATE:
-							output_lines_list[i].insert_line_at(output_lines_list[i].get_line_count()-1,node.cur_datas[i])
-						#only apply when v-mode is show and the output is v
-						elif Global.current_v_mode == Global.VMode.SHOW:
-								output_lines_list[i].insert_line_at(output_lines_list[i].get_line_count()-1,"v")
-			'
-			
-			
-			
-			#solution judgement
-			'
-			for i in range(3):
-				actual_output_lines[i][]
-				pass
-			'
-				
-				
-				
-				
-				
-				
-				
-				
 					
 		#for node in node_list:#专门为髓鞘安排的遍历
 			#if node.type == Global.Type.NEGATION or node.type == Global.Type.THRESHOLD or node.type == Global.Type.DELAY:
@@ -346,6 +303,43 @@ func Step():
 		$StepCounter.text = "Step:" + str(Global.steps)
 		Global.steps +=1
 	pass
+	
+'if node.cur_states[i] == Global.State.ACTIVATE:
+	actual_output_lines[i].insert_line_at(actual_output_lines[i].get_line_count()-1,node.cur_datas[i])
+	if node.cur_datas[i] != expected_output_lines[i].get_line(output_counter[i]) and auto_pause:
+		_stop_auto_run()
+	else:
+		output_counter[i] += 1
+#only apply when v-mode is show and the output is v
+elif Global.current_v_mode == Global.VMode.SHOW:
+	actual_output_lines[i].insert_line_at(actual_output_lines[i].get_line_count()-1,"v")
+	print(node.cur_datas[i])
+	print(expected_output_lines[i].get_line(output_counter[i]))
+	if node.cur_datas[i] != expected_output_lines[i].get_line(output_counter[i]) and output_counter[i] != 0 and auto_pause:
+		_stop_auto_run()
+'
+	
+func _display_and_judge_output(node):
+	for i in range(3):
+		if node.cur_states[i] == Global.State.ACTIVATE:
+			if node.cur_datas[i] == expected_output[i].get_line(output_counter[i]):
+				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,node.cur_datas[i])
+				output_counter[i] += 1
+			else:
+				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,">"+node.cur_datas[i])
+				if auto_pause: _stop_auto_run()
+		elif Global.current_v_mode == Global.VMode.SHOW:
+			#before output
+			if output_counter == 0:
+				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,"v")
+			#output correct
+			elif expected_output[i].get_line(output_counter[i]) == "v":
+				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,"v")
+				output_counter[i] += 1
+			#output wrong
+			else:
+				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,">v")
+				if auto_pause: _stop_auto_run()
 	
 func Reload():
 	get_tree().reload_current_scene()
@@ -364,7 +358,7 @@ func ResetAll():
 	$StepCounter.text = "Step:"
 	
 	for i in range(3):
-		actual_output_lines[i].clear()
+		actual_output[i].clear()
 		output_counter[i] = 0
 	
 	connection_list.clear()
@@ -398,7 +392,7 @@ func read_level():
 	
 	for i in range(3):
 		input_lines[i].clear()
-		expected_output_lines[i].clear()
+		expected_output[i].clear()
 	
 	var config =  ConfigFile.new()
 	config.load("user://CurrentLevelPath.cfg")
@@ -422,7 +416,7 @@ func read_level():
 			input_lines[i].insert_line_at(line_number, reading_line[line_number])
 		reading_line = line[i+8+(Global.current_test_index-1)*7].split(",")
 		for line_number in range(reading_line.size()):
-			expected_output_lines[i].insert_line_at(
+			expected_output[i].insert_line_at(
 				line_number, reading_line[line_number])
 	
 	update_display()
