@@ -425,6 +425,7 @@ ticks_on_borders = true
 [connection signal="pressed" from="Buttons/ChangeVMode" to="." method="_on_change_v_mode_pressed"]
 [connection signal="value_changed" from="SelectTest" to="." method="_on_select_test_value_changed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="pressed" from="VSensitive" to="." method="_toggle_v_mode"]
 [connection signal="pressed" from="AutoPause" to="." method="_toggle_auto_pause"]
 [connection signal="pressed" from="TestControl/PrevTest" to="." method="prev_test"]
 [connection signal="pressed" from="TestControl/NextTest" to="." method="next_test"]

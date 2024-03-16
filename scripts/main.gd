@@ -106,11 +106,6 @@ func _add_myelin(id):
 func _process(_delta):
 	pass
 
-func neuron_menu():
-	
-	print()
-	pass
-
 func createConstant():
 	add_to_graph(constant.instantiate())
 
@@ -238,7 +233,6 @@ func Step():
 					
 					
 				
-		# print(node_list)
 		
 		
 		if input_node !=null:
@@ -304,20 +298,6 @@ func Step():
 		Global.steps +=1
 	pass
 	
-'if node.cur_states[i] == Global.State.ACTIVATE:
-	actual_output_lines[i].insert_line_at(actual_output_lines[i].get_line_count()-1,node.cur_datas[i])
-	if node.cur_datas[i] != expected_output_lines[i].get_line(output_counter[i]) and auto_pause:
-		_stop_auto_run()
-	else:
-		output_counter[i] += 1
-#only apply when v-mode is show and the output is v
-elif Global.current_v_mode == Global.VMode.SHOW:
-	actual_output_lines[i].insert_line_at(actual_output_lines[i].get_line_count()-1,"v")
-	print(node.cur_datas[i])
-	print(expected_output_lines[i].get_line(output_counter[i]))
-	if node.cur_datas[i] != expected_output_lines[i].get_line(output_counter[i]) and output_counter[i] != 0 and auto_pause:
-		_stop_auto_run()
-'
 	
 func _display_and_judge_output(node):
 	for i in range(3):
@@ -330,7 +310,7 @@ func _display_and_judge_output(node):
 				if auto_pause: _stop_auto_run()
 		elif Global.current_v_mode == Global.VMode.SHOW:
 			#before output
-			if output_counter == 0:
+			if output_counter[i] == 0 or output_counter[i] >= expected_output[i].get_line_count()-1:
 				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,"v")
 			#output correct
 			elif expected_output[i].get_line(output_counter[i]) == "v":
@@ -488,4 +468,12 @@ func _on_timer_changed(value):
 
 func _toggle_auto_pause():
 	auto_pause = not auto_pause
+	pass # Replace with function body.
+
+
+func _toggle_v_mode():
+	if Global.current_v_mode == Global.VMode.SHOW:
+		Global.current_v_mode = Global.VMode.HIDE
+	else:
+		Global.current_v_mode = Global.VMode.SHOW
 	pass # Replace with function body.
