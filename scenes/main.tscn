@@ -225,18 +225,18 @@ text = "ChooseLevel"
 [node name="ResetALL" type="Button" parent="Buttons"]
 layout_mode = 0
 offset_left = 520.0
-offset_top = 62.0
+offset_top = 48.0
 offset_right = 560.0
-offset_bottom = 102.0
+offset_bottom = 88.0
 icon = ExtResource("3_xm2o8")
 expand_icon = true
 
 [node name="Step" type="Button" parent="Buttons"]
 layout_mode = 0
 offset_left = 640.0
-offset_top = 64.0
+offset_top = 48.0
 offset_right = 680.0
-offset_bottom = 104.0
+offset_bottom = 88.0
 theme = SubResource("Theme_5u3fx")
 icon = ExtResource("4_3qqtk")
 expand_icon = true
@@ -244,9 +244,9 @@ expand_icon = true
 [node name="Run" type="Button" parent="Buttons"]
 layout_mode = 0
 offset_left = 560.0
-offset_top = 23.0
+offset_top = 8.0
 offset_right = 640.0
-offset_bottom = 103.0
+offset_bottom = 88.0
 theme = SubResource("Theme_5u3fx")
 icon = ExtResource("5_jnmyw")
 expand_icon = true
