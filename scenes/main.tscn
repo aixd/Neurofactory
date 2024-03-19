@@ -1,7 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://b486dpbtpwx6o"]
+[gd_scene load_steps=7 format=3 uid="uid://b486dpbtpwx6o"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_okffg"]
 [ext_resource type="Texture2D" uid="uid://jk4juh4pr4os" path="res://sprites/bg.png" id="2_r57gm"]
+[ext_resource type="Texture2D" uid="uid://cojld16ffvjkm" path="res://sprites/reset.svg" id="3_xm2o8"]
+[ext_resource type="Texture2D" uid="uid://bnrwjt53glxv5" path="res://sprites/step.svg" id="4_3qqtk"]
+[ext_resource type="Texture2D" uid="uid://5yagcd8i3u4o" path="res://sprites/play.svg" id="5_jnmyw"]
 
 [sub_resource type="Theme" id="Theme_5u3fx"]
 default_font_size = 24
@@ -205,10 +208,10 @@ text = "Input"
 
 [node name="OutputButton" type="Button" parent="Buttons"]
 layout_mode = 0
-offset_left = 264.0
-offset_top = 72.0
-offset_right = 328.0
-offset_bottom = 120.0
+offset_left = 344.0
+offset_top = 12.0
+offset_right = 408.0
+offset_bottom = 60.0
 text = "Output"
 
 [node name="ChooseLevel" type="Button" parent="Buttons"]
@@ -221,29 +224,32 @@ text = "ChooseLevel"
 
 [node name="ResetALL" type="Button" parent="Buttons"]
 layout_mode = 0
-offset_left = 352.0
-offset_top = 16.0
-offset_right = 440.0
-offset_bottom = 60.0
-text = "ResetALL"
+offset_left = 520.0
+offset_top = 62.0
+offset_right = 560.0
+offset_bottom = 102.0
+icon = ExtResource("3_xm2o8")
+expand_icon = true
 
 [node name="Step" type="Button" parent="Buttons"]
 layout_mode = 0
-offset_left = 352.0
-offset_top = 72.0
-offset_right = 440.0
-offset_bottom = 116.0
+offset_left = 640.0
+offset_top = 64.0
+offset_right = 680.0
+offset_bottom = 104.0
 theme = SubResource("Theme_5u3fx")
-text = "Step"
+icon = ExtResource("4_3qqtk")
+expand_icon = true
 
 [node name="Run" type="Button" parent="Buttons"]
 layout_mode = 0
-offset_left = 504.0
-offset_top = 12.0
-offset_right = 671.0
-offset_bottom = 54.0
+offset_left = 560.0
+offset_top = 23.0
+offset_right = 640.0
+offset_bottom = 103.0
 theme = SubResource("Theme_5u3fx")
-text = "Run/Pause"
+icon = ExtResource("5_jnmyw")
+expand_icon = true
 
 [node name="Reload" type="Button" parent="Buttons"]
 layout_mode = 0
@@ -337,10 +343,10 @@ button_pressed = true
 text = "V Sensitive"
 
 [node name="AutoPause" type="CheckButton" parent="."]
-offset_left = 520.0
-offset_top = 92.0
-offset_right = 652.0
-offset_bottom = 123.0
+offset_left = 264.0
+offset_top = 72.0
+offset_right = 396.0
+offset_bottom = 103.0
 focus_mode = 0
 button_pressed = true
 text = "AutoPause"
@@ -393,10 +399,10 @@ flat = true
 [node name="Timer" type="Timer" parent="."]
 
 [node name="HSlider" type="HSlider" parent="."]
-offset_left = 664.0
-offset_top = 84.0
-offset_right = 823.0
-offset_bottom = 100.0
+offset_left = 701.0
+offset_top = 119.0
+offset_right = 897.0
+offset_bottom = 135.0
 rotation = -3.14159
 min_value = 0.05
 max_value = 1.0
