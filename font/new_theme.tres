@@ -1,0 +1,4 @@
+[gd_resource type="Theme" format=3 uid="uid://d3selyv4dxwpa"]
+
+[resource]
+TextEdit/colors/font_readonly_color = Color(0.87451, 0.87451, 0.87451, 1)

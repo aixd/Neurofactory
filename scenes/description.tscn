@@ -1,0 +1,50 @@
+[gd_scene load_steps=4 format=3 uid="uid://unakjog6dqh4"]
+
+[ext_resource type="Script" path="res://scenes/description.gd" id="1_pt4fa"]
+[ext_resource type="Theme" uid="uid://d3selyv4dxwpa" path="res://font/new_theme.tres" id="2_xaego"]
+
+[sub_resource type="Theme" id="Theme_n6o2e"]
+
+[node name="Description" type="GraphNode"]
+offset_right = 490.0
+offset_bottom = 55.0
+size_flags_stretch_ratio = 0.0
+theme = SubResource("Theme_n6o2e")
+title = "Description"
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+script = ExtResource("1_pt4fa")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+
+[node name="TextEdit" type="TextEdit" parent="Control"]
+layout_mode = 0
+offset_left = -18.0
+offset_top = -12.0
+offset_right = 472.0
+offset_bottom = 375.0
+focus_mode = 0
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+theme = ExtResource("2_xaego")
+theme_override_font_sizes/font_size = 24
+editable = false
+selecting_enabled = false
+wrap_mode = 1
+
+[node name="Description" type="TextEdit" parent="Control"]
+visible = false
+layout_mode = 2
+offset_left = 499.0
+offset_top = -14.0
+offset_right = 953.0
+offset_bottom = 383.0
+wrap_mode = 1

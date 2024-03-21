@@ -23,9 +23,9 @@ func _gui_input(event : InputEvent):
 	if event.is_action_pressed("delete_node") and \
 	Global.running_state == Global.RunningState.IDLE:
 		if self.type == Global.Type.INPUT:
-			Global.input_counter -=1
+			Global.input_counter = 0
 		if self.type == Global.Type.OUTPUT:
-			Global.output_counter -=1
+			Global.output_counter = 0
 		var graph = self.get_parent()
 		var connection_list = graph.get_connection_list()
 		for c in connection_list:

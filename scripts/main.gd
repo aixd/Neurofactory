@@ -13,6 +13,11 @@ var negation = preload("res://scenes/negation.tscn")
 var threshold = preload("res://scenes/threshold.tscn")
 var delay = preload("res://scenes/delay.tscn")
 var constant = preload("res://scenes/constant.tscn")
+var description = preload("res://scenes/description.tscn")
+
+var play_icon = preload("res://AlxvUI/play_hover.png")
+var pause_icon = preload("res://AlxvUI/pause_hover.png")
+
 @onready var stepCounter = $StepCounter
 @onready var graph = $GraphEdit
 @onready var cost = $Cost
@@ -46,8 +51,10 @@ var constant = preload("res://scenes/constant.tscn")
 @onready var timer = $Timer
 @onready var timer_length = $HSlider
 
-@onready var neuron = $Buttons/Neuron
-@onready var myelin = $Buttons/Myelin
+@onready var neuron_button = $Buttons/Neuron
+@onready var myelin_button = $Buttons/Myelin
+@onready var play_button = $Buttons/Run
+
 #@onready var curList = []
 #@onready var preList = []
 #var Global.steps = 0
@@ -83,8 +90,8 @@ func _ready():
 	
 	Global.running_state = Global.RunningState.IDLE
 	
-	neuron.get_popup().id_pressed.connect(_add_neuron)
-	myelin.get_popup().id_pressed.connect(_add_myelin)
+	neuron_button.get_popup().id_pressed.connect(_add_neuron)
+	myelin_button.get_popup().id_pressed.connect(_add_myelin)
 	
 
 func _add_neuron(id):
@@ -157,14 +164,12 @@ func _on_graph_edit_connection_request(from_node, from_port, to_node, to_port):
 			return
 	
 	#每个输入端口只能接一条线，但不影响输出端口拉多条线
-	if FROM_NODE.type == Global.Type.INPUT:
-		if TO_NODE.type == Global.Type.NEGATION or TO_NODE.type == Global.Type.THRESHOLD or TO_NODE.type == Global.Type.DELAY:
-			return
 	if FROM_NODE.type == Global.Type.INHIBITORY or FROM_NODE.type == Global.Type.INHIBITORY2:
 		if TO_NODE.type == Global.Type.NEGATION or TO_NODE.type == Global.Type.THRESHOLD:
 			return
 	if TO_NODE.type == Global.Type.OUTPUT:
-		if FROM_NODE.type == Global.Type.INHIBITORY or FROM_NODE.type == Global.Type.INHIBITORY2:#限定output前面不能是抑制系神经元
+		#限定output前面不能是抑制神经元
+		if FROM_NODE.type == Global.Type.INHIBITORY or FROM_NODE.type == Global.Type.INHIBITORY2:
 			return
 	
 	
@@ -196,17 +201,21 @@ func Step():
 		connection_list = graph.get_connection_list()
 		#print(connection_list)
 		for child in graph.get_children():
-			if child is GraphNode:
+			if child is GraphNode and child.name != "Description":
 				node_list.append(child)
 		
 				
 		for node in node_list:
-			print(node.name)
+			# print(node.name)
 			if node.type != Global.Type.INPUT:
 				for c in connection_list:
 					if c["to_node"] == node.name:
-						#print(typeof(connection["from_port"])) #这个connection["from_port"]返回的确实是int类型 
-						node.input_node_lists.append([graph.get_node(str(c["from_node"])),c["from_port"],c["to_port"]])#感觉是最重要的一步
+						#返回的确实是int类型
+						# print(typeof(connection["from_port"])) #这个connection["from_port"]
+						#感觉是最重要的一步
+						node.input_node_lists.append(
+							[graph.get_node(str(c["from_node"])),c["from_port"],c["to_port"]]
+						)
 						
 						if !node.is_neuron:
 							node.pre_node = graph.get_node(str(c["from_node"]))
@@ -228,12 +237,6 @@ func Step():
 				print(node.order)
 				if node.order>max_order:
 					max_order = node.order
-					
-					
-					
-					
-				
-		
 		
 		if input_node !=null:
 			for i in range(3):
@@ -254,18 +257,14 @@ func Step():
 				node.Act()
 				#只用执行一次就够了吧
 		
-		$StepCounter.text = "Steps:" + str(Global.steps)
+		$StepCounter.text = "Step:" + str(Global.steps)
 		Global.steps +=1
 		
 		
 	elif Global.steps !=0:
 		for node in node_list:
 			node.Update()
-					
 		
-		
-		
-			
 		for node in node_list:
 			
 			match node.type:
@@ -279,13 +278,16 @@ func Step():
 				
 				Global.Type.OUTPUT:
 					node.Act()
-					_display_and_judge_output(node)
+					if _display_and_judge_output(node):
+						if Global.current_test_index == max_test_number:
+							_display_victory_info()
+							_stop_auto_run()
+						else:
+							if auto_run:
+								next_test()
+								_start_auto_run()
+						return
 					
-					
-		#for node in node_list:#专门为髓鞘安排的遍历
-			#if node.type == Global.Type.NEGATION or node.type == Global.Type.THRESHOLD or node.type == Global.Type.DELAY:
-				#node.Act()
-				
 		for i in range(1,max_order+1):
 			for node in node_list:
 				if !node.is_neuron and node.order ==i:
@@ -303,14 +305,27 @@ func _display_and_judge_output(node):
 	for i in range(3):
 		if node.cur_states[i] == Global.State.ACTIVATE:
 			if node.cur_datas[i] == expected_output[i].get_line(output_counter[i]):
-				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,node.cur_datas[i])
+				actual_output[i].insert_line_at(
+					actual_output[i].get_line_count()-1,
+					node.cur_datas[i]
+				)
 				output_counter[i] += 1
+				if output_counter[i] == expected_output[i].get_line_count()-1:
+					if _output_match():
+						return true
 			else:
-				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,">"+node.cur_datas[i])
+				actual_output[i].insert_line_at(
+					actual_output[i].get_line_count()-1,
+					">"+node.cur_datas[i]
+				)
 				if auto_pause: _stop_auto_run()
-		elif Global.current_v_mode == Global.VMode.SHOW:
+			print(expected_output[i].get_line_count()-1)
+		else:
 			#before output
-			if output_counter[i] == 0 or output_counter[i] >= expected_output[i].get_line_count()-1:
+			if output_counter[i] == 0 and v_sensitive:
+				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,"v")
+			#after output
+			elif output_counter[i] >= expected_output[i].get_line_count()-1:
 				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,"v")
 			#output correct
 			elif expected_output[i].get_line(output_counter[i]) == "v":
@@ -328,22 +343,14 @@ func Reload():
 func ResetAll():
 	for node in node_list:
 		node.Reset()
-		
-		# node and node.Reset()
-	
 	Global.running_state = Global.RunningState.IDLE
-	
 	Global.steps = 0
-	
 	$StepCounter.text = "Step:"
-	
 	for i in range(3):
 		actual_output[i].clear()
 		output_counter[i] = 0
-	
 	connection_list.clear()
 	node_list.clear()
-	
 	_stop_auto_run()
 
 
@@ -351,7 +358,14 @@ func _on_choose_level_pressed():
 	file_dialog.popup()
 	pass # Replace with function body.
 
-
+func _output_match():
+	var output_match = 0
+	for i in range(3):
+		if output_counter[i] == expected_output[i].get_line_count()-1:
+			output_match += 1
+	if output_match == 3:
+		return true
+	return false
 
 
 
@@ -384,7 +398,10 @@ func read_level():
 	var line = content.split("\n")
 	
 	#set name and despcription
-	level_description.text = "{0}\n{1}\n".format([line[0],line[1]],"{_}")
+	graph.get_node("Description").set_text("{0}\n{1}\n".format([line[0],line[1]],"{_}"))
+	
+	# level_description.text = "{0}\n{1}\n".format([line[0],line[1]],"{_}")
+	
 	
 	v_sensitive = int(line[2])
 	max_test_number = int(line[3])
@@ -401,7 +418,12 @@ func read_level():
 	
 	update_display()
 
-func _on_change_v_mode_pressed():
+func _change_v_sensitive():
+	v_sensitive = not v_sensitive
+	
+	
+	
+	
 	if Global.current_v_mode == Global.VMode.SHOW:
 		Global.current_v_mode = Global.VMode.HIDE
 	else:
@@ -419,25 +441,21 @@ func _on_select_test_value_changed(value):
 	read_level()
 	pass # Replace with function body.
 
+func _set_test_case(case):
+	Global.current_test_index = case
+	ResetAll()
+	read_level()
+
 
 func prev_test():
 	if Global.current_test_index != 1:
-		Global.current_test_index -= 1
-		ResetAll()
-		read_level()
-
-	pass # Replace with function body.
-
-
+		_set_test_case(Global.current_test_index-1)
 func next_test():
 	if Global.current_test_index < max_test_number:
-		Global.current_test_index += 1
-		ResetAll()
-		read_level()
-	pass # Replace with function body.
+		_set_test_case(Global.current_test_index+1)
 	
+
 func update_display():
-	
 	test.text = "test:{0}/{1}".format([Global.current_test_index, max_test_number],"{_}")
 	current_test_number.text = "Case {0}".format([Global.current_test_index])
 	current_v_sensitive.button_pressed = bool(v_sensitive)
@@ -445,24 +463,38 @@ func update_display():
 	
 	pass
 
+func _display_victory_info():
+	graph.get_node("Description").display_victory_info()
 
 func _toggle_auto_run():
-	auto_run = not auto_run
-	
-	if auto_run:
-		timer.start()
+	if !auto_run:
+		_set_test_case(1)
+		_start_auto_run()
 	else:
-		timer.stop()
-	pass # Replace with function body.
-	
+		_stop_auto_run()
+
+
+func _start_auto_run():
+	Step()
+	auto_run = true
+	timer.start()
+	play_button.icon = pause_icon
+
 func _stop_auto_run():
 	auto_run = false
 	timer.stop()
+	play_button.icon = play_icon
 
 
 	
 func _on_timer_changed(value):
-	timer.wait_time = value
+	if auto_run:
+		timer.stop()
+		timer.wait_time = value
+		timer.start()
+	else:
+		timer.wait_time = value
+	
 	
 
 

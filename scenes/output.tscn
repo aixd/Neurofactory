@@ -3,8 +3,9 @@
 [ext_resource type="Script" path="res://scripts/output.gd" id="2_albcw"]
 
 [node name="Output" type="GraphNode"]
-offset_right = 148.0
-offset_bottom = 172.0
+offset_right = 177.0
+offset_bottom = 251.0
+size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.0
 title = "Output"
 slot/0/left_enabled = true
@@ -38,18 +39,18 @@ script = ExtResource("2_albcw")
 
 [node name="Data" type="Label" parent="."]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 46
 text = "v"
 horizontal_alignment = 1
 
 [node name="Data2" type="Label" parent="."]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 46
 text = "v"
 horizontal_alignment = 1
 
 [node name="Data3" type="Label" parent="."]
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 46
 text = "v"
 horizontal_alignment = 1
