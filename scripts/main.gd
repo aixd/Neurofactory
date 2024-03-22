@@ -4,11 +4,7 @@ var adderNeuron = preload("res://scenes/adderNeuron.tscn")
 var inhibitoryNeuron = preload("res://scenes/inhibitoryNeuron.tscn")
 var inhibitoryNeuron2 = preload("res://scenes/inhibitoryNeuron2.tscn")
 var input = preload("res://scenes/input.tscn")
-#var input2 = null
-#var input3 = null
 var output = preload("res://scenes/output.tscn")
-#var output2 = preload("res://scenes/output.tscn")
-#var output3 = preload("res://scenes/output.tscn")
 var negation = preload("res://scenes/negation.tscn")
 var threshold = preload("res://scenes/threshold.tscn")
 var delay = preload("res://scenes/delay.tscn")
@@ -39,7 +35,7 @@ var pause_icon = preload("res://AlxvUI/pause_hover.png")
 	$Channels/ExpectedOutput3,
 ]
 
-@onready var actual_output = [
+@onready var act_out = [
 	$Channels/ActualOutput,
 	$Channels/ActualOutput2,
 	$Channels/ActualOutput3,
@@ -304,8 +300,8 @@ func _display_and_judge_output(node):
 	for i in range(3):
 		if node.cur_states[i] == Global.State.ACTIVATE:
 			if node.cur_datas[i] == expected_output[i].get_line(output_counter[i]):
-				actual_output[i].insert_line_at(
-					actual_output[i].get_line_count()-1,
+				act_out[i].insert_line_at(
+					act_out[i].get_line_count()-1,
 					node.cur_datas[i]
 				)
 				output_counter[i] += 1
@@ -313,27 +309,27 @@ func _display_and_judge_output(node):
 					if _output_match():
 						return true
 			else:
-				actual_output[i].insert_line_at(
-					actual_output[i].get_line_count()-1,
+				act_out[i].insert_line_at(
+					act_out[i].get_line_count()-1,
 					">"+node.cur_datas[i]
 				)
 				if auto_pause: _stop_auto_run()
 			print(expected_output[i].get_line_count()-1)
 		else:
 			#before output
-			if output_counter[i] == 0 and v_sensitive:
-				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,"v")
+			if output_counter[i] == 0:
+				act_out[i].insert_line_at(act_out[i].get_line_count()-1,"v")
 			#after output
 			elif output_counter[i] >= expected_output[i].get_line_count()-1:
-				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,"v")
+				act_out[i].insert_line_at(act_out[i].get_line_count()-1,"v")
 			#output correct
-			elif expected_output[i].get_line(output_counter[i]) == "v":
-				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,"v")
-				output_counter[i] += 1
-			#output wrong
-			else:
-				actual_output[i].insert_line_at(actual_output[i].get_line_count()-1,">v")
-				if auto_pause: _stop_auto_run()
+			elif v_sensitive:
+				if expected_output[i].get_line(output_counter[i]) == "v":
+					act_out[i].insert_line_at(act_out[i].get_line_count()-1,"v")
+					output_counter[i] += 1
+				else:
+					act_out[i].insert_line_at(act_out[i].get_line_count()-1,">v")
+					if auto_pause: _stop_auto_run()
 	
 func Reload():
 	get_tree().reload_current_scene()
@@ -346,7 +342,7 @@ func ResetAll():
 	Global.steps = 0
 	$StepCounter.text = "Step:"
 	for i in range(3):
-		actual_output[i].clear()
+		act_out[i].clear()
 		output_counter[i] = 0
 	connection_list.clear()
 	node_list.clear()
