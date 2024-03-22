@@ -163,15 +163,21 @@ offset_right = 77.0
 offset_bottom = 161.0
 text = "Myelin"
 flat = false
-item_count = 4
+item_count = 3
 popup/item_0/text = "Negation"
 popup/item_0/id = 0
 popup/item_1/text = "Threshold"
 popup/item_1/id = 1
 popup/item_2/text = "Delay"
 popup/item_2/id = 2
-popup/item_3/text = "Constant"
-popup/item_3/id = 3
+
+[node name="Constant" type="Button" parent="Buttons"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 91.0
+offset_right = 118.0
+offset_bottom = 124.0
+text = "Constant"
 
 [node name="AdderNeuronButton" type="Button" parent="Buttons"]
 visible = false
@@ -222,15 +228,6 @@ offset_top = 64.0
 offset_right = 328.0
 offset_bottom = 112.0
 text = "Delay"
-
-[node name="Constant" type="Button" parent="Buttons"]
-visible = false
-layout_mode = 0
-offset_left = 338.0
-offset_top = 64.0
-offset_right = 418.0
-offset_bottom = 112.0
-text = "Constant"
 
 [node name="InputButton" type="Button" parent="Buttons"]
 visible = false
@@ -461,13 +458,13 @@ ticks_on_borders = true
 
 [connection signal="connection_request" from="GraphEdit" to="." method="_on_graph_edit_connection_request"]
 [connection signal="disconnection_request" from="GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
+[connection signal="pressed" from="Buttons/Constant" to="." method="createConstant"]
 [connection signal="pressed" from="Buttons/AdderNeuronButton" to="." method="createAdderNeuron"]
 [connection signal="pressed" from="Buttons/InhibitoryNeuronButton" to="." method="createInhibitoryNeuron"]
 [connection signal="pressed" from="Buttons/InhibitoryNeuronButton2" to="." method="createInhibitoryNeuron2"]
 [connection signal="pressed" from="Buttons/NegationButton" to="." method="createNegation"]
 [connection signal="pressed" from="Buttons/ThresholdButton" to="." method="createThreshold"]
 [connection signal="pressed" from="Buttons/DelayButton" to="." method="createDelay"]
-[connection signal="pressed" from="Buttons/Constant" to="." method="createConstant"]
 [connection signal="pressed" from="Buttons/InputButton" to="." method="createInput"]
 [connection signal="pressed" from="Buttons/OutputButton" to="." method="createOutput"]
 [connection signal="pressed" from="Buttons/ChooseLevel" to="." method="_on_choose_level_pressed"]

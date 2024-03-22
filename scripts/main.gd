@@ -105,7 +105,6 @@ func _add_myelin(id):
 		0:createNegation()
 		1:createThreshold()
 		2:createDelay()
-		3:createConstant()
 
 
 
