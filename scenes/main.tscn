@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://b486dpbtpwx6o"]
+[gd_scene load_steps=14 format=3 uid="uid://b486dpbtpwx6o"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_okffg"]
 [ext_resource type="Texture2D" uid="uid://jk4juh4pr4os" path="res://sprites/bg.png" id="2_r57gm"]
@@ -9,6 +9,11 @@
 [ext_resource type="PackedScene" uid="uid://unakjog6dqh4" path="res://scenes/description.tscn" id="5_orl6f"]
 [ext_resource type="Texture2D" uid="uid://logx37fayexh" path="res://AlxvUI/play_hover.png" id="5_rny8g"]
 [ext_resource type="Texture2D" uid="uid://bjvuyjduthgyx" path="res://AlxvUI/del_hover.png" id="6_1li23"]
+[ext_resource type="Theme" uid="uid://uyhwbeyput42" path="res://font/input.tres" id="6_4j8cu"]
+[ext_resource type="Theme" uid="uid://wp75bn4o32l1" path="res://font/act_out.tres" id="7_wjnek"]
+
+[sub_resource type="Theme" id="Theme_hmbop"]
+TextEdit/colors/background_color = Color(0, 0.6, 0, 0.2)
 
 [sub_resource type="Theme" id="Theme_5u3fx"]
 default_font_size = 24
@@ -76,6 +81,7 @@ offset_left = 998.0
 offset_top = 14.0
 offset_right = 1043.0
 offset_bottom = 214.0
+theme = ExtResource("6_4j8cu")
 
 [node name="Input2" type="TextEdit" parent="Channels"]
 layout_mode = 0
@@ -83,6 +89,7 @@ offset_left = 998.0
 offset_top = 214.0
 offset_right = 1043.0
 offset_bottom = 414.0
+theme = ExtResource("6_4j8cu")
 
 [node name="Input3" type="TextEdit" parent="Channels"]
 layout_mode = 0
@@ -90,6 +97,7 @@ offset_left = 998.0
 offset_top = 414.0
 offset_right = 1043.0
 offset_bottom = 614.0
+theme = ExtResource("6_4j8cu")
 
 [node name="ExpectedOutput" type="TextEdit" parent="Channels"]
 layout_mode = 0
@@ -97,6 +105,7 @@ offset_left = 1048.0
 offset_top = 14.0
 offset_right = 1093.0
 offset_bottom = 214.0
+theme = SubResource("Theme_hmbop")
 
 [node name="ExpectedOutput2" type="TextEdit" parent="Channels"]
 layout_mode = 0
@@ -104,6 +113,7 @@ offset_left = 1048.0
 offset_top = 214.0
 offset_right = 1093.0
 offset_bottom = 414.0
+theme = SubResource("Theme_hmbop")
 
 [node name="ExpectedOutput3" type="TextEdit" parent="Channels"]
 layout_mode = 0
@@ -111,6 +121,7 @@ offset_left = 1048.0
 offset_top = 414.0
 offset_right = 1093.0
 offset_bottom = 614.0
+theme = SubResource("Theme_hmbop")
 
 [node name="ActualOutput" type="TextEdit" parent="Channels"]
 layout_mode = 0
@@ -118,6 +129,7 @@ offset_left = 1098.0
 offset_top = 14.0
 offset_right = 1143.0
 offset_bottom = 214.0
+theme = ExtResource("7_wjnek")
 
 [node name="ActualOutput2" type="TextEdit" parent="Channels"]
 layout_mode = 0
@@ -125,6 +137,7 @@ offset_left = 1098.0
 offset_top = 214.0
 offset_right = 1143.0
 offset_bottom = 414.0
+theme = ExtResource("7_wjnek")
 
 [node name="ActualOutput3" type="TextEdit" parent="Channels"]
 layout_mode = 0
@@ -132,6 +145,7 @@ offset_left = 1098.0
 offset_top = 414.0
 offset_right = 1143.0
 offset_bottom = 614.0
+theme = ExtResource("7_wjnek")
 
 [node name="Buttons" type="Control" parent="."]
 layout_mode = 3
@@ -406,26 +420,22 @@ text = "Show V"
 [node name="TestControl" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 1032.0
-offset_top = 88.0
-offset_right = 1128.0
-offset_bottom = 120.0
 
 [node name="PrevTest" type="Button" parent="TestControl"]
 layout_mode = 0
-offset_left = -1008.0
-offset_top = 398.0
-offset_right = -981.0
-offset_bottom = 435.0
+offset_left = 24.0
+offset_top = 486.0
+offset_right = 51.0
+offset_bottom = 523.0
 focus_mode = 0
 text = "<"
 
 [node name="TestNumber" type="Label" parent="TestControl"]
 layout_mode = 0
-offset_left = -981.0
-offset_top = 395.0
-offset_right = -921.0
-offset_bottom = 439.0
+offset_left = 51.0
+offset_top = 483.0
+offset_right = 111.0
+offset_bottom = 527.0
 text = "Case 1"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -433,10 +443,10 @@ vertical_alignment = 1
 [node name="NextTest" type="Button" parent="TestControl"]
 layout_mode = 1
 anchors_preset = -1
-offset_left = -913.0
-offset_top = 398.0
-offset_right = -889.0
-offset_bottom = 435.0
+offset_left = 119.0
+offset_top = 486.0
+offset_right = 143.0
+offset_bottom = 523.0
 focus_mode = 0
 text = ">"
 

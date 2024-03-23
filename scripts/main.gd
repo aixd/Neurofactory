@@ -29,7 +29,7 @@ var pause_icon = preload("res://AlxvUI/pause_hover.png")
 	$Channels/Input3,
 ]
 
-@onready var expected_output = [
+@onready var exp_out = [
 	$Channels/ExpectedOutput, 
 	$Channels/ExpectedOutput2, 
 	$Channels/ExpectedOutput3,
@@ -61,7 +61,7 @@ var pause_icon = preload("res://AlxvUI/pause_hover.png")
 #@onready var lines = []
 # Called when the node enters the scene tree for the first time.
 
-var output_counter = [0,0,0]
+var out_cnt = [0,0,0]
 var judge_output_lines = [[], [], []]
 
 
@@ -299,13 +299,13 @@ func Step():
 func _display_and_judge_output(node):
 	for i in range(3):
 		if node.cur_states[i] == Global.State.ACTIVATE:
-			if node.cur_datas[i] == expected_output[i].get_line(output_counter[i]):
+			if node.cur_datas[i] == exp_out[i].get_line(out_cnt[i]):
 				act_out[i].insert_line_at(
 					act_out[i].get_line_count()-1,
 					node.cur_datas[i]
 				)
-				output_counter[i] += 1
-				if output_counter[i] == expected_output[i].get_line_count()-1:
+				out_cnt[i] += 1
+				if out_cnt[i] == exp_out[i].get_line_count()-1:
 					if _output_match():
 						return true
 			else:
@@ -314,22 +314,14 @@ func _display_and_judge_output(node):
 					">"+node.cur_datas[i]
 				)
 				if auto_pause: _stop_auto_run()
-			print(expected_output[i].get_line_count()-1)
+			print(exp_out[i].get_line_count()-1)
 		else:
-			#before output
-			if output_counter[i] == 0:
+			if exp_out[i].get_line(out_cnt[i]) == "v":
 				act_out[i].insert_line_at(act_out[i].get_line_count()-1,"v")
-			#after output
-			elif output_counter[i] >= expected_output[i].get_line_count()-1:
-				act_out[i].insert_line_at(act_out[i].get_line_count()-1,"v")
-			#output correct
-			elif v_sensitive:
-				if expected_output[i].get_line(output_counter[i]) == "v":
-					act_out[i].insert_line_at(act_out[i].get_line_count()-1,"v")
-					output_counter[i] += 1
-				else:
-					act_out[i].insert_line_at(act_out[i].get_line_count()-1,">v")
-					if auto_pause: _stop_auto_run()
+				out_cnt[i] += 1
+			elif v_sensitive and out_cnt[i] > 0 and out_cnt[i] < exp_out[i].get_line_count()-1:
+				act_out[i].insert_line_at(act_out[i].get_line_count()-1,">v")
+				if auto_pause: _stop_auto_run()
 	
 func Reload():
 	get_tree().reload_current_scene()
@@ -343,7 +335,7 @@ func ResetAll():
 	$StepCounter.text = "Step:"
 	for i in range(3):
 		act_out[i].clear()
-		output_counter[i] = 0
+	out_cnt = [0,0,0]
 	connection_list.clear()
 	node_list.clear()
 	_stop_auto_run()
@@ -356,7 +348,7 @@ func _on_choose_level_pressed():
 func _output_match():
 	var output_match = 0
 	for i in range(3):
-		if output_counter[i] == expected_output[i].get_line_count()-1:
+		if out_cnt[i] == exp_out[i].get_line_count()-1:
 			output_match += 1
 	if output_match == 3:
 		return true
@@ -381,7 +373,7 @@ func read_level():
 	
 	for i in range(3):
 		input_lines[i].clear()
-		expected_output[i].clear()
+		exp_out[i].clear()
 	
 	var config =  ConfigFile.new()
 	config.load("user://CurrentLevelPath.cfg")
@@ -408,8 +400,7 @@ func read_level():
 			input_lines[i].insert_line_at(line_number, reading_line[line_number])
 		reading_line = line[i+8+(Global.current_test_index-1)*7].split(",")
 		for line_number in range(reading_line.size()):
-			expected_output[i].insert_line_at(
-				line_number, reading_line[line_number])
+			exp_out[i].insert_line_at(line_number, reading_line[line_number])
 	
 	update_display()
 
