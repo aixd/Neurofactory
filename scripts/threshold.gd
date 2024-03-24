@@ -57,6 +57,9 @@ func Reset():
 	
 
 func Act():
+	for i in range(3):
+		cur_datas[i] = "v"
+		cur_states[i] = Global.State.INACTIVATE
 	#var flag = false
 	for input_node in input_node_lists:
 		if input_node[0].cur_states[input_node[1]] == Global.State.ACTIVATE and !input_node[0].canInhib:
@@ -65,36 +68,13 @@ func Act():
 				#cur_state = Global.State.ACTIVATE
 				cur_datas[0] = input_node[0].cur_datas[input_node[1]]
 				cur_states[0] = Global.State.ACTIVATE
-				cur_datas[1] = "v"
-				cur_states[1] = Global.State.INACTIVATE
-				cur_datas[2] = "v"
-				cur_states[2] = Global.State.INACTIVATE
 			elif int(input_node[0].cur_datas[input_node[1]]) == threshold:
 				cur_datas[1] = input_node[0].cur_datas[input_node[1]]
 				cur_states[1] = Global.State.ACTIVATE
-				cur_datas[0] = "v"
-				cur_states[0] = Global.State.INACTIVATE
-				cur_datas[2] = "v"
-				cur_states[2] = Global.State.INACTIVATE
-				#cur_data = "v"
-				#cur_state = Global.State.INACTIVATE
 			elif int(input_node[0].cur_datas[input_node[1]]) < threshold:
 				cur_datas[2] = input_node[0].cur_datas[input_node[1]]
 				cur_states[2] = Global.State.ACTIVATE
-				cur_datas[0] = "v"
-				cur_states[0] = Global.State.INACTIVATE
-				cur_datas[1] = "v"
-				cur_states[1] = Global.State.INACTIVATE
 				
-		if input_node[0].cur_states[input_node[1]] == Global.State.INACTIVATE and !input_node[0].canInhib:
-			#cur_data = "v"
-			#cur_state = Global.State.INACTIVATE
-			cur_datas[0] = "v"
-			cur_states[0] = Global.State.INACTIVATE
-			cur_datas[1] = "v"
-			cur_states[1] = Global.State.INACTIVATE
-			cur_datas[2] = "v"
-			cur_states[2] = Global.State.INACTIVATE
 	
 	#print(cur_data)
 	data1.text = cur_datas[0]

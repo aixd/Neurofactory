@@ -38,13 +38,12 @@ func Reset():
 
 func Act():
 	#var flag = false
-	for input_node in input_node_lists:
-		if input_node[0].cur_states[input_node[1]] == Global.State.ACTIVATE and !input_node[0].canInhib:
-			cur_datas[0] = str(- int(input_node[0].cur_datas[input_node[1]]))
+	for input in input_node_lists:
+		cur_states[0] = Global.State.INACTIVATE
+		cur_datas[0] = "v"
+		if input[0].cur_states[input[1]] == Global.State.ACTIVATE and !input[0].canInhib:
 			cur_states[0] = Global.State.ACTIVATE
-		if input_node[0].cur_states[input_node[1]] == Global.State.INACTIVATE and !input_node[0].canInhib:
-			cur_datas[0] = "v"
-			cur_states[0] = Global.State.INACTIVATE
+			cur_datas[0] = str(- int(input[0].cur_datas[input[1]]))
 	
 	#print(cur_data)
 	data.text = cur_datas[0]

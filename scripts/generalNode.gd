@@ -3,10 +3,7 @@ extends GraphNode
 var canInhib = false
 var is_multiple_output = false
 var is_neuron = true
-
-
-
-
+# @export_enum() var type: int
 
 func Update():
 	pass

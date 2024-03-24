@@ -82,8 +82,6 @@ var max_order = 1
 func _ready():
 	Global.input_counter = 0
 	Global.output_counter = 0
-	
-	
 	Global.running_state = Global.RunningState.IDLE
 	
 	neuron_button.get_popup().id_pressed.connect(_add_neuron)
@@ -95,37 +93,25 @@ func _add_neuron(id):
 		0:createAdderNeuron()
 		1:createInhibitoryNeuron()
 		2:createInhibitoryNeuron2()
-		
+
 func _add_myelin(id):
 	match id:
 		0:createNegation()
 		1:createThreshold()
 		2:createDelay()
 
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	pass
-
 func createConstant():
 	add_to_graph(constant.instantiate())
-
 func createDelay():
 	add_to_graph(delay.instantiate())
-	
 func createAdderNeuron():
 	add_to_graph(adderNeuron.instantiate())
-	
 func createInhibitoryNeuron():
 	add_to_graph(inhibitoryNeuron.instantiate())
-	
 func createInhibitoryNeuron2():
 	add_to_graph(inhibitoryNeuron2.instantiate())
-
 func createNegation():
 	add_to_graph(negation.instantiate())
-
 func createThreshold():
 	add_to_graph(threshold.instantiate())
 
@@ -202,19 +188,18 @@ func Step():
 				
 		for node in node_list:
 			# print(node.name)
-			if node.type != Global.Type.INPUT:
-				for c in connection_list:
-					if c["to_node"] == node.name:
-						#返回的确实是int类型
-						# print(typeof(connection["from_port"])) #这个connection["from_port"]
-						#感觉是最重要的一步
-						node.input_node_lists.append(
-							[graph.get_node(str(c["from_node"])),c["from_port"],c["to_port"]]
-						)
-						
-						if !node.is_neuron:
-							node.pre_node = graph.get_node(str(c["from_node"]))
-							print("Debug is_neuron")
+			for c in connection_list:
+				if c["to_node"] == node.name:
+					#返回的确实是int类型
+					# print(typeof(connection["from_port"])) #这个connection["from_port"]
+					#感觉是最重要的一步
+					node.input_node_lists.append(
+						[graph.get_node(str(c["from_node"])),c["from_port"],c["to_port"]]
+					)
+					
+					if !node.is_neuron:
+						node.pre_node = graph.get_node(str(c["from_node"]))
+						print("Debug "+node.name)
 						
 						
 					#if connection["from_node"] == node.name and !node.is_neuron:
@@ -224,12 +209,10 @@ func Step():
 			if !node.is_neuron:
 				var cur_node = node
 				var pre_node = node.pre_node
-				while(pre_node and !pre_node.is_neuron):
+				while(pre_node and !pre_node.is_neuron and pre_node.type != Global.Type.INPUT):
 					node.order += 1
 					cur_node = pre_node
 					pre_node = cur_node.pre_node
-					
-				print(node.order)
 				if node.order>max_order:
 					max_order = node.order
 		
@@ -243,8 +226,8 @@ func Step():
 		
 		for i in range(1,max_order+1):
 			for node in node_list:
-				if !node.is_neuron and node.order ==i and node.type == Global.Type.DELAY:
-					node.Update()
+				if !node.is_neuron and node.order ==i:
+					node.Act()
 		
 		
 		for node in node_list:
@@ -265,20 +248,19 @@ func Step():
 			match node.type:
 				Global.Type.INPUT:
 					node.GetInput(Global.steps)
-				Global.Type.ADDER, \
-				Global.Type.INHIBITORY, \
-				Global.Type.INHIBITORY2:
+				Global.Type.ADDER, Global.Type.INHIBITORY, Global.Type.INHIBITORY2:
 					node.Act()
 				
 				
 				Global.Type.OUTPUT:
 					node.Act()
 					if _display_and_judge_output(node):
-						if Global.current_test_index == max_test_number:
-							_display_victory_info()
-							_stop_auto_run()
-						else:
-							if auto_run:
+						if auto_run:
+							
+							if Global.current_test_index == max_test_number:
+								_display_victory_info()
+								_stop_auto_run()
+							else:
 								next_test()
 								_start_auto_run()
 						return
@@ -287,10 +269,6 @@ func Step():
 			for node in node_list:
 				if !node.is_neuron and node.order ==i:
 					node.Act()
-					
-		
-		
-		
 		$StepCounter.text = "Step:" + str(Global.steps)
 		Global.steps +=1
 	pass
@@ -314,7 +292,6 @@ func _display_and_judge_output(node):
 					">"+node.cur_datas[i]
 				)
 				if auto_pause: _stop_auto_run()
-			print(exp_out[i].get_line_count()-1)
 		else:
 			if exp_out[i].get_line(out_cnt[i]) == "v":
 				act_out[i].insert_line_at(act_out[i].get_line_count()-1,"v")
@@ -322,7 +299,8 @@ func _display_and_judge_output(node):
 			elif v_sensitive and out_cnt[i] > 0 and out_cnt[i] < exp_out[i].get_line_count()-1:
 				act_out[i].insert_line_at(act_out[i].get_line_count()-1,">v")
 				if auto_pause: _stop_auto_run()
-	
+	return false
+
 func Reload():
 	get_tree().reload_current_scene()
 	
